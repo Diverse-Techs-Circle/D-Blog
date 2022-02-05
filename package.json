@@ -5,6 +5,7 @@
   "author": "AsPulse <aspulse.x@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "estrella": "^1.4.1"
+    "estrella": "^1.4.1",
+    "typescript": "^4.5.5"
   }
 }
