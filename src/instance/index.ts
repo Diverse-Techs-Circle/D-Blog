@@ -1,5 +1,6 @@
-import { copyFile, mkdir, readdir, rm } from "fs/promises";
+import { copyFile, mkdir, readdir, rm, readFile, writeFile } from "fs/promises";
 import { basename, extname, join, resolve } from "path";
+import { DBlogPage } from "../page";
 
 export interface DBlogInstanceOptions {
   contentPath: string,
@@ -12,14 +13,15 @@ export class DBlogInstance {
   async build() {
     const contents = await getAllFilesInJoin(this.options.contentPath, ['.md']);
     await rm(this.options.webPath, { recursive: true });
-    await Promise.all(contents.map(async v => {
-      const buildAt = resolve(this.options.webPath, basename(v.dirent.name, extname(v.dirent.name)));
-      await mkdir(buildAt, {recursive: true}).catch(() => {});
-      copyFile(
-        resolve(v.basePath, v.directory, v.dirent.name),
-        resolve(buildAt, 'index.html')
-        );
-    }));
+    const pages = contents.map(async v => new DBlogPage(
+      (await readFile(resolve(v.basePath, v.directory, v.dirent.name))).toString()
+    ));
+    const renderer = (await Promise.all(pages)).map(async v => {
+      const target = resolve(this.options.webPath, v.permalink);
+      await mkdir(target).catch(() => {});
+      writeFile(resolve(target, 'index.html'), await v.render());
+    });
+    await Promise.all(renderer);
   }
 }
 
