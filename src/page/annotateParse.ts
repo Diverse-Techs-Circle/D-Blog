@@ -1,9 +1,13 @@
 import { fatal } from "../util/fatal";
 
+export interface ILineData {
+  line: number;
+  data: string;
+}
 export interface IAnnotate {
   key: string, value: string, lineNumber: number
 }
-export function annotateCheck(data: string, fileName: string): IAnnotate[] | null {
+export function annotateCheck(data: string, fileName: string): { annotate: IAnnotate[], content: ILineData[] } | null {
   const lines = data.split(/\n/).map((v, i) => ({data: v, line: i + 1}));
   const beginAnnotate = lines.find(v => isAnnotateStart(v.data));
   if(!beginAnnotate) return null;
@@ -11,7 +15,8 @@ export function annotateCheck(data: string, fileName: string): IAnnotate[] | nul
   if(!finishAnnotate) return null;
 
   const anotates = lines.filter(v => beginAnnotate.line < v.line && v.line < finishAnnotate.line);
-  return anotates.map(v => {
+  const content = lines.filter(v => beginAnnotate.line > v.line || v.line > finishAnnotate.line);
+  return { annotate: anotates.map(v => {
     const match = v.data.match(/^(.+?):( |)(.+)$/);
     if(!match) {
       fatal(fileName, v.line, [
@@ -21,7 +26,7 @@ export function annotateCheck(data: string, fileName: string): IAnnotate[] | nul
       return { key: '', value: '', lineNumber: 0 };
     }
     return { key: match[1], value: match[3], lineNumber: v.line };
-  });
+  }), content };
 }
 
 function isAnnotateStart(data: string): boolean {

@@ -1,5 +1,5 @@
 import { fatal, warn } from "../util/fatal";
-import { annotateCheck, IAnnotate } from "./annotateParse";
+import { annotateCheck, IAnnotate, ILineData } from "./annotateParse";
 
 export type markdown = string;
 export type html = string;
@@ -8,23 +8,27 @@ interface IDay { year: number, month: number, day: number }
 
 export class DBlogPage {
   title: string;
+  content: ILineData[];
   permalink: string;
   postedAt: IDay | null;
-  constructor(public page: markdown, public filePath: string) {
+  constructor(page: markdown, public filePath: string) {
 
 
     const annotateKey = ['title', 'permalink', 'postedAt'];
-    const annotate = annotateCheck(page, filePath);
+    const parsed = annotateCheck(page, filePath);
+    this.content = [];
     this.title = '';
     this.permalink = '';
     this.postedAt = null;
-    if ( annotate === null ) {
+    if ( parsed === null ) {
       fatal(filePath, 1, [
         'D-Blogアノテートが不足しています。',
         '各Markdownファイルには、//@D-Blog --- と、 //--- で囲まれたアノテートが必要です。',
         '詳しくはREADMEをご覧ください。'
       ]);
     } else {
+      const annotate = parsed.annotate;
+      this.content = parsed.content;
       annotate.filter(v => !annotateKey.includes(v.key)).forEach(v => {
         warn(filePath, v.lineNumber, [
           `D-Blogアノテート「${v.key}」は無効です。`
@@ -37,11 +41,12 @@ export class DBlogPage {
       this.title = getTitle(toParse, filePath, firstLine) ?? this.title;
       this.permalink = getPermalink(toParse, filePath, firstLine) ?? this.permalink;
       this.postedAt = getPostedAt(toParse, filePath, firstLine) ?? this.postedAt;
+      console.log(this);
     }
   }
 
   async render(): Promise<html> {
-    return this.page;
+    return this.content.join('\n');
   }
 }
 
