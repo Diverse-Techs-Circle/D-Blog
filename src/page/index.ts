@@ -50,15 +50,15 @@ export function getTitle(toParse: IAnnotate[], filePath: string, annotateLine: n
     return undefined;
   }
   if ( title.value ===  '') {
-    fatal(filePath, annotateLine, ['記事のタイトルは空ではいけません。'])
+    fatal(filePath, title.lineNumber, ['記事のタイトルは空ではいけません。'])
     return undefined;
   }
   if ( title.value.length > 128 ) {
-    fatal(filePath, annotateLine, ['記事のタイトルは128文字を超えてはいけません。'])
+    fatal(filePath, title.lineNumber, ['記事のタイトルは128文字を超えてはいけません。'])
     return title.value;
   }
   if ( title.value.length > 32 ) {
-    warn(filePath, annotateLine, ['記事のタイトルは32文字以内が適切です。'])
+    warn(filePath, title.lineNumber, ['記事のタイトルは32文字以内が適切です。'])
   }
   return title.value;
 }
@@ -70,14 +70,14 @@ export function getPermalink(toParse: IAnnotate[], filePath: string, annotateLin
     return undefined;
   }
   if ( permalink.value ===  '') {
-    fatal(filePath, annotateLine, ['パーマリンクは空ではいけません。'])
+    fatal(filePath, permalink.lineNumber, ['パーマリンクは空ではいけません。'])
     return undefined;
   }
   if ( permalink.value.length > 64 ) {
-    fatal(filePath, annotateLine, ['パーマリンクは64文字を超えてはいけません。'])
+    fatal(filePath, permalink.lineNumber, ['パーマリンクは64文字を超えてはいけません。'])
   }
   if ( !/^([A-Z]|[a-z]|[0-9]|-)+$/.test(permalink.value) ) {
-    fatal(filePath, annotateLine, ['パーマリンクには英数字とハイフンしか使えません。'])
+    fatal(filePath, permalink.lineNumber, ['パーマリンクには英数字とハイフンしか使えません。'])
   }
   return permalink.value;
 }

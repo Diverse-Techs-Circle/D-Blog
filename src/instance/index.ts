@@ -19,12 +19,12 @@ export class DBlogInstance {
       .map(async v => new DBlogPage(
         (await readFile(v)).toString(), v
       ));
-    parseStopper();
     const renderer = (await Promise.all(pages)).map(async v => {
       const target = resolve(this.options.webPath, v.permalink);
       await mkdir(target, { recursive: true }).catch(() => {});
       writeFile(resolve(target, 'index.html'), await v.render());
     });
+    parseStopper();
     await Promise.all(renderer);
   }
 }
