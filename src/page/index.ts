@@ -46,7 +46,7 @@ export class DBlogPage {
   }
 
   async render(): Promise<html> {
-    return this.content.join('\n');
+    return this.content.map(v => v.data).join('\n');
   }
 }
 

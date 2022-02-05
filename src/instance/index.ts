@@ -13,7 +13,9 @@ export class DBlogInstance {
 
   async build() {
     const contents = await getAllFilesInJoin(this.options.contentPath, ['.md']);
-    await rm(this.options.webPath, { recursive: true });
+    await rm(this.options.webPath, { recursive: true }).catch(() => {});
+    await mkdir(this.options.webPath, { recursive: true }).catch(() => {});
+    await writeFile(resolve(this.options.webPath, '.gitkeep'), '');
     const pages = contents
       .map(v => resolve(v.basePath, v.directory, v.dirent.name))
       .map(async v => new DBlogPage(
