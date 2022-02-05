@@ -13,12 +13,14 @@ export class DBlogInstance {
   async build() {
     const contents = await getAllFilesInJoin(this.options.contentPath, ['.md']);
     await rm(this.options.webPath, { recursive: true });
-    const pages = contents.map(async v => new DBlogPage(
-      (await readFile(resolve(v.basePath, v.directory, v.dirent.name))).toString()
-    ));
+    const pages = contents
+      .map(v => resolve(v.basePath, v.directory, v.dirent.name))
+      .map(async v => new DBlogPage(
+        (await readFile(v)).toString(), v
+      ));
     const renderer = (await Promise.all(pages)).map(async v => {
       const target = resolve(this.options.webPath, v.permalink);
-      await mkdir(target).catch(() => {});
+      await mkdir(target, { recursive: true }).catch(() => {});
       writeFile(resolve(target, 'index.html'), await v.render());
     });
     await Promise.all(renderer);
