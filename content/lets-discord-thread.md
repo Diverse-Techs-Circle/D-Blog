@@ -2,10 +2,9 @@
 
 
 //@D-Blog ---
-title: Discordの新機能、スレッドを議論に活用しようあああああああああああああああああああああ
-permalink: lets-discord-threadあ
+title: Discordの新機能、スレッドを議論に活用しよう
+permalink: lets-discord-thread
 postedAt: 2022/2/5
-imiwakaran: property
 //---
 
 
