@@ -6,4 +6,8 @@ export interface DBlogInstanceOptions {
 
 export class DBlogInstance {
   constructor(public options: DBlogInstanceOptions){}
+
+  async build() {
+
+  }
 }
