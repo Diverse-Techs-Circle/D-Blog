@@ -1,3 +1,5 @@
+//hey!
+
 
 //--- @D-Blog
 title: Discordの新機能、スレッドを議論に活用しよう
