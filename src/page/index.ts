@@ -4,10 +4,12 @@ import { annotateCheck, IAnnotate } from "./annotateParse";
 export type markdown = string;
 export type html = string;
 
+interface IDay { year: number, month: number, day: number }
+
 export class DBlogPage {
   title: string;
   permalink: string;
-  postedAt: Date;
+  postedAt: IDay | null;
   constructor(public page: markdown, public filePath: string) {
 
 
@@ -15,7 +17,7 @@ export class DBlogPage {
     const annotate = annotateCheck(page, filePath);
     this.title = '';
     this.permalink = '';
-    this.postedAt = new Date();
+    this.postedAt = null;
     if ( annotate === null ) {
       fatal(filePath, 1, [
         'D-Blogアノテートが不足しています。',
@@ -34,7 +36,7 @@ export class DBlogPage {
 
       this.title = getTitle(toParse, filePath, firstLine) ?? this.title;
       this.permalink = getPermalink(toParse, filePath, firstLine) ?? this.permalink;
-      this.postedAt = new Date();
+      this.postedAt = getPostedAt(toParse, filePath, firstLine) ?? this.postedAt;
     }
   }
 
@@ -81,4 +83,31 @@ export function getPermalink(toParse: IAnnotate[], filePath: string, annotateLin
   }
   return permalink.value;
 }
+
+export function getPostedAt(toParse: IAnnotate[], filePath: string, annotateLine: number): IDay | undefined {
+  const postedAt = toParse.find(v => v.key === 'postedAt');
+  if ( !postedAt ) {
+    fatal(filePath, annotateLine, ['投稿日アノテートが不足しています。', 'postedAt: 年/月/日 のように指定してください。']);
+    return undefined;
+  }
+  const data = postedAt.value.split('/').map(v => parseInt(v));
+  if(data.some(v => isNaN(v))) {
+    fatal(filePath, annotateLine, ['文字が含まれており、日付として不適切です。', 'postedAt: 年/月/日 のように指定してください。', '「月」「日」などの単語は不要で、年は西暦であることに注意してください。', '例: 2022/3/25']);
+    return undefined;
+  }
+  if( data.length !== 3 ) {
+    fatal(filePath, annotateLine, ['日付として不適切です。', 'postedAt: 年/月/日 のように指定してください。']);
+    return undefined;
+  }
+  if(data[1] < 0 || data[1] > 12 ) {
+    fatal(filePath, annotateLine, ['月は1～12の範囲で指定してください。']);
+    return undefined;
+  }
+  if(data[2] < 0 || data[2] > 31 ) {
+    fatal(filePath, annotateLine, ['日は1～31の範囲で指定してください。']);
+    return undefined;
+  }
+  return { year: data[0], month: data[1], day: data[2] };
+}
+
 
