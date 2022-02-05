@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "repository": "https://github.com/Diverse-Techs-Circle/D-Blog.git",
   "author": "AsPulse <aspulse.x@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "estrella": "^1.4.1"
+  }
 }
