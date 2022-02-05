@@ -2,7 +2,7 @@ import { relative, resolve } from "path";
 import { cwd } from "process";
 
 export function fatal(file: string, line: number, error: string) {
-  const pos = './' + relative(cwd(), file).replace(/\\/g, '/');
-  console.error(`${pos}:${line} error: ${error}`);
+  console.error(file);
+  console.error(`Error: ${line}:1 ${error}`);
   process.exit(1);
 }
