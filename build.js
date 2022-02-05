@@ -8,8 +8,6 @@ build({
   bundle: true,
   minify: true,
   sourcemap: true,
-  splitting: true,
-  format: 'esm',
   tslint: true,
   platform: 'node'
 }).catch(() => { process.exit(1); });
