@@ -3,12 +3,12 @@ import { fatal } from "../util/fatal";
 export interface IAnnotate {
   key: string, value: string, lineNumber: number
 }
-export function annotateCheck(data: string, fileName: string): IAnnotate[] {
+export function annotateCheck(data: string, fileName: string): IAnnotate[] | null {
   const lines = data.split(/\n/).map((v, i) => ({data: v, line: i + 1}));
   const beginAnnotate = lines.find(v => isAnnotateStart(v.data));
-  if(!beginAnnotate) return [];
+  if(!beginAnnotate) return null;
   const finishAnnotate = lines.find(v => isAnnotateFinish(v.data) && v.line > beginAnnotate.line);
-  if(!finishAnnotate) return [];
+  if(!finishAnnotate) return null;
 
   const anotates = lines.filter(v => beginAnnotate.line < v.line && v.line < finishAnnotate.line);
   return anotates.map(v => {

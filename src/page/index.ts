@@ -16,7 +16,7 @@ export class DBlogPage {
     this.title = '';
     this.permalink = '';
     this.postedAt = new Date();
-    if ( annotate.length === 0 ) {
+    if ( annotate === null ) {
       fatal(filePath, 1, [
         'D-Blogアノテートが不足しています。',
         '各Markdownファイルには、//@D-Blog --- と、 //--- で囲まれたアノテートが必要です。',
@@ -30,7 +30,7 @@ export class DBlogPage {
       });
 
       const toParse = annotate.filter(v => annotateKey.includes(v.key));
-      const firstLine = annotate[0].lineNumber - 1;
+      const firstLine = (annotate[0]?.lineNumber ?? 1) - 1;
 
       this.title = getTitle(toParse, filePath, firstLine) ?? this.title;
       this.permalink = getPermalink(toParse, filePath, firstLine) ?? this.permalink;
