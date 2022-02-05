@@ -1,6 +1,7 @@
-import { copyFile, mkdir, readdir, rm, readFile, writeFile } from "fs/promises";
-import { basename, extname, join, resolve } from "path";
+import { mkdir, readdir, rm, readFile, writeFile } from "fs/promises";
+import { extname, join, resolve } from "path";
 import { DBlogPage } from "../page";
+import { parseStopper } from "../util/fatal";
 
 export interface DBlogInstanceOptions {
   contentPath: string,
@@ -18,6 +19,7 @@ export class DBlogInstance {
       .map(async v => new DBlogPage(
         (await readFile(v)).toString(), v
       ));
+    parseStopper();
     const renderer = (await Promise.all(pages)).map(async v => {
       const target = resolve(this.options.webPath, v.permalink);
       await mkdir(target, { recursive: true }).catch(() => {});
