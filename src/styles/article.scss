@@ -1,0 +1,22 @@
+@forward 'components/common.scss';
+
+#content {
+
+  article {
+    padding: 1.25em 3em;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 3px black;
+    box-shadow: 0 0 8px rgb(0 0 0 / 8%);
+  }
+
+  section#title-wrapper {
+    padding: 0.8em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    h1 {
+      display: inline;
+    }
+  }
+}
