@@ -1,5 +1,5 @@
 //@D-Blog ---
-title: CSSは完璧なのにメディアクエリが効かない時はviewport確認して！な話
+title: メディアクエリが効かないときはビューポートの指定忘れを疑え！
 permalink: remember-viewport-mediaquery
 postedAt: 2022/02/06
 author:
