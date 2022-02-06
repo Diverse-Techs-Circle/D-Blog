@@ -83,7 +83,7 @@ export class DBlogHTML {
       `<html lang="${this.lang}">`,
       ogp ? `<head prefix="${ogp.prefix}">` : '<head>',
       ...(this.styleFiles.map(v => `<link rel="stylesheet" href="${v}">`)),
-      ...(this.jsFiles.map(v => `<script src="${v}" defer />`)),
+      ...(this.jsFiles.map(v => `<script src="${v}" defer></script>`)),
       ...this.meta.map(v => buildMeta(v)),
       ...(ogp ? ogp.data : []),
       `<title>${this.title}</title>`,
