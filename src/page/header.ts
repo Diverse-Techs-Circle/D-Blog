@@ -28,3 +28,23 @@ export function buildMeta(meta: IMetaData): string {
   }
   return `<meta name="${meta.name}" content="${meta.content}">`;
 }
+
+class DBlogHTML {
+  meta: IMetaData[] = [];
+  constructor(public title: string, public lang: 'en' | 'ja'){}
+
+  render(body: string) {
+    return [
+      '<!DOCTYPE html>',
+      `<html lang="${this.lang}">`,
+      '<head>',
+      ...this.meta.map(v => buildMeta(v)),
+      `<title>${this.title}</title>`,
+      '</head>',
+      '<body>',
+      body,
+      '</body>',
+      `</html>`
+    ].join('');
+  }
+}
