@@ -41,14 +41,42 @@ export class DBlogPage {
       this.title = getTitle(toParse, filePath, firstLine) ?? this.title;
       this.permalink = getPermalink(toParse, filePath, firstLine) ?? this.permalink;
       this.postedAt = getPostedAt(toParse, filePath, firstLine) ?? this.postedAt;
-      console.log(this);
     }
   }
 
   async render(): Promise<html> {
-    return this.content.map(v => v.data).join('\n');
+    return this.content.map(v => {
+      if(v.data.split('').every(v => [' '].includes(v))) {
+        return ``
+      }
+      const splitted = v.data.split(' ');
+      const headerTagSharp = splitted[0] ?? '';
+      if(headerTagSharp !== '' && headerTagSharp.split('').every(v => v === '#')) {
+        const level = headerTagSharp.length;
+        if ( level > 6 ) {
+          fatal(this.filePath, v.line, [
+            'headerタグは、レベル1からレベル6までしか使えません。',
+            '(#の数は6個以下になります)'
+          ]);
+        }
+        return `<h${level}>${textDecoration(splitted.filter((_, i) => i !== 0).join(' '))}</h${level}>`;
+      }
+      return `<p>${textDecoration(v.data)}</p>`;
+    }).join('');
   }
 }
+
+export function textDecoration(text: markdown): html {
+  return text
+    .replace(/(?<!\\)\*(?<!\\)\*(.+)(?<!\\)\*(?<!\\)\*\*/g, '<b>$1</b>' )
+    .replace(/(?<!\\)\*(.+)(?<!\\)\*/g, '<i>$1</i>' )
+    .replace(/\_\_(.+)\_\_/g, '<u>$1</u>' )
+    .replace(/\~\~(.+)\~\~/g, '<s>$1</s>' )
+    .replace(/\\\*/g, '*' )
+    .replace(/\\\_/g, '_' )
+    .replace(/\\\~/g, '~' );
+}
+
 
 export function getTitle(toParse: IAnnotate[], filePath: string, annotateLine: number): string | undefined {
   const title = toParse.find(v => v.key === 'title');
