@@ -68,7 +68,6 @@ export class DBlogPage {
             '(#の数は5個以下になります)'
           ]);
         }
-        //TODO
         return `<h${level + 1}>${textDecoration(splitted.filter((_, i) => i !== 0).join(' '))}</h${level}>`;
       }
 
