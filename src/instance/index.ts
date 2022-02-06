@@ -5,7 +5,8 @@ import { parseStopper } from "../util/fatal";
 
 export interface DBlogInstanceOptions {
   contentPath: string,
-  webPath: string
+  webPath: string,
+  siteUrl: string
 }
 
 export class DBlogInstance {
@@ -19,7 +20,7 @@ export class DBlogInstance {
     const pages = contents
       .map(v => resolve(v.basePath, v.directory, v.dirent.name))
       .map(async v => new DBlogPage(
-        (await readFile(v)).toString(), v
+        (await readFile(v)).toString(), v, this
       ));
     const renderer = (await Promise.all(pages)).map(async v => {
       const target = resolve(this.options.webPath, v.permalink);
