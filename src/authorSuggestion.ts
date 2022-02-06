@@ -49,7 +49,7 @@ if ( !authorName || !authorURL || !PRNumber || !PAT ) {
         };
       }
     }).map(async v =>
-      writeFile((await v).filePath, (await v).data.join(''))
+      writeFile((await v).filePath, (await v).data.join('\n'))
     );
   await Promise.all(writers);
 })();
