@@ -9,7 +9,16 @@ body {
 #content {
   max-width: 800px;
   margin: 0 auto;
+  padding-bottom: 5em;
   @include mq.narrowWidth() {
     width: 100%;
+  }
+  p {
+    margin: 2.25em 0;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    &:not(:first-child) {
+      margin-top: 5em;
+    }
   }
 }

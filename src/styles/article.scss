@@ -4,7 +4,7 @@
 
 #content {
   article {
-    padding: 1.25em 3em;
+    padding: 1.25em clamp(1.25em, 4vw, 3em);
     background: white;
     border-radius: 12px;
     @include mq.narrowWidth() {
