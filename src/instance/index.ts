@@ -9,7 +9,8 @@ export interface DBlogInstanceOptions {
   contentPath: string,
   webPath: string,
   siteUrl: string,
-  domainPrefix: string
+  domainPrefix: string,
+  relativePath: boolean
 }
 
 export class DBlogInstance {

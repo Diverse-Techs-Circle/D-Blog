@@ -83,8 +83,8 @@ export class DBlogPage {
       site_name: 'D-Blog',
       locale: 'ja_JP'
     });
-    html.addStyle(join(this.instance.options.domainPrefix, 'styles', 'article.css'));
-    html.addScript(join(this.instance.options.domainPrefix, 'scripts', 'article.js'));
+    html.addStyle(this.instance.options.relativePath ? '../../styles/article.css' : join(this.instance.options.domainPrefix, 'styles', 'article.css'));
+    html.addScript(this.instance.options.relativePath ? '../../scripts/article.js' : join(this.instance.options.domainPrefix, 'scripts', 'article.js'));
     return html.render(body);
   }
 }
