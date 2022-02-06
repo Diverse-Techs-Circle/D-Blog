@@ -22,5 +22,15 @@ jobs:
       run: yarn --check-files --frozen-lockfile --non-interactive
     - name: Build TypeScript
       run: node ./buildAuthorSuggestion.js
-    - name: Show Envs
-      run: echo ${{ github.event.pull_request }}
+    - name: Suggestion Make
+      run: node ./dist/authorSuggestion.js
+      env:
+        PAT: ${{ github.token }}
+        PRNUMBER: ${{ github.event.pull_request.number }}
+        AUTHORNAME: ${{ github.event.pull_request.user.login }}
+        AUTHORURL: ${{ github.event.pull_request.user.avatar_url }}
+    - name: Suggestion Push
+      uses: reviewdog/action-suggester@v1
+      with:
+        tool_name: AuthorNameAnnotate
+        level: 'info'

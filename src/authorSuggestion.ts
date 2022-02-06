@@ -1,11 +1,31 @@
 import { readFile, writeFile } from "fs/promises";
 import { isAnnotateFinish, isAnnotateStart } from "./page/annotateParse";
+import got from 'got';
+import { extname, resolve } from "path";
+import { cwd } from "process";
 
-const authorName: string = '';
-const authorURL: string = '';
-const targets: string[] = [];
+const authorName = process.env.AUTHORNAME;
+const authorURL = process.env.AUTHORURL;
+const PRNumber = process.env.PRNUMBER;
+const PAT = process.env.PAT;
+if ( !authorName || !authorURL || !PRNumber || !PAT ) {
+  process.exit(1);
+}
 
 (async () => {
+  const targets: string[] = (
+    (<{filename: string, status: 'added' | 'modified'}[]>JSON.parse((await got(`https://api.github.com/repos/Diverse-Techs-Circle/D-Blog/pulls/${PRNumber}/files`, {
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'Authorization': `token ${PAT}`
+      }
+    })).body))
+      .filter(v => v.status === 'added')
+      .map(v => v.filename)
+      .filter(v => extname(v) === '.md')
+      .map(v => resolve(cwd(), v))
+  );
+
   const writers = targets
     .map(async v => ({ filePath: v, data: (await readFile(v)).toString() }))
     .map<Promise<{ filePath: string, data: string[] }>>(async v => {
