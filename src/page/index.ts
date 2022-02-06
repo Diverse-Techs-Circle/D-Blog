@@ -1,6 +1,7 @@
 import { join } from "path";
 import { DBlogInstance } from "../instance";
 import { fatal, warn } from "../util/fatal";
+import { getGlobalPageTitle } from "../util/getTitle";
 import { wrapOn } from "../util/html";
 import { annotateCheck, IAnnotate, ILineData } from "./annotateParse";
 import { DBlogHTML } from "./header";
@@ -53,7 +54,7 @@ export class DBlogPage {
   }
 
   async render(): Promise<html> {
-    const body = this.content.map(v => {
+    const body = (await Promise.all(this.content.map(async v => {
       if(v.data.split('').every(v => [' '].includes(v))) {
         return ``
       }
@@ -70,8 +71,17 @@ export class DBlogPage {
         //TODO
         return `<h${level + 1}>${textDecoration(splitted.filter((_, i) => i !== 0).join(' '))}</h${level}>`;
       }
+
+      const linkcardMatch = v.data.match(/\[linkcard\]\((http.+)\)/);
+      if(linkcardMatch) {
+        return `<a class="linkcard" href="${linkcardMatch[1]}">${
+          wrapOn('p', [await getGlobalPageTitle(linkcardMatch[1])], ['title']) +
+          wrapOn('p', [(linkcardMatch[1].match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/) ?? ['', ''])[1]], ['domain'])
+        }</a>`;
+      }
+
       return `<p>${textDecoration(v.data)}</p>`;
-    }).join('');
+    }))).join('');
 
     const html = new DBlogHTML(this.title + ' | D-Blog', 'ja');
     html.addMeta({ charset: 'UTF-8' });
