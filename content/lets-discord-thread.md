@@ -2,16 +2,8 @@
 title: Discordの新機能、スレッドを議論に活用しよう
 permalink: lets-discord-thread
 postedAt: 2022/2/5
+author: AsPulse@https://avatars.githubusercontent.com/u/84216737?v=4
 //---
-
-
-**強調表示**
-~~取り消し~~
-__下線__
-*斜体*
-***強調斜体***
-**一部のみ*斜体***
-\*\*ただのアスタリスク\*\*
 
 ## スレッドとは？何が便利なの？
 メッセージと紐付けて通常のチャンネルの下に子チャンネルのようなものを作ることができる機能。

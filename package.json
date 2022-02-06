@@ -7,6 +7,7 @@
   "dependencies": {
     "@types/node": "^17.0.15",
     "estrella": "^1.4.1",
+    "got": "^12.0.1",
     "typescript": "^4.5.5"
   }
 }

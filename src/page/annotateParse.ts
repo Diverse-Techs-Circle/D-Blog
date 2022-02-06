@@ -17,7 +17,7 @@ export function annotateCheck(data: string, fileName: string): { annotate: IAnno
   const anotates = lines.filter(v => beginAnnotate.line < v.line && v.line < finishAnnotate.line);
   const content = lines.filter(v => beginAnnotate.line > v.line || v.line > finishAnnotate.line);
   return { annotate: anotates.map(v => {
-    const match = v.data.match(/^(.+?):( |)(.+)$/);
+    const match = v.data.match(/^(.+?):( |)(.*)$/);
     if(!match) {
       fatal(fileName, v.line, [
         `${v.data} は、アノテートとして不適切です。`,
@@ -29,10 +29,10 @@ export function annotateCheck(data: string, fileName: string): { annotate: IAnno
   }), content };
 }
 
-function isAnnotateStart(data: string): boolean {
+export function isAnnotateStart(data: string): boolean {
   return /^((| )*)\/\/( |)@D-Blog( ||-)*$/.test(data);
 }
 
-function isAnnotateFinish(data: string): boolean {
+export function isAnnotateFinish(data: string): boolean {
   return /^((| )*)\/\/( ||-)*$/.test(data)
 }
