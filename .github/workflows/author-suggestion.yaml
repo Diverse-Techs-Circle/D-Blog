@@ -1,0 +1,26 @@
+name: Author Suggestion
+
+on:
+  # Run tests for any PRs.
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - uses: actions/checkout@v2
+    - name: Cache node_modules
+      id: node_modules_cache_id
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: node-v16-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+    - name: Resolve dependencies
+      run: yarn --check-files --frozen-lockfile --non-interactive
+    - name: Build TypeScript
+      run: node ./buildAuthorSuggestion.js
+    - name: Show Envs
+      run: echo ${{ github.event.pull_request }}
