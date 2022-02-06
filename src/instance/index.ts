@@ -22,12 +22,9 @@ export class DBlogInstance {
     await writeFile(resolve(this.options.webPath, '.gitkeep'), '');
 
     await mkdir(resolve(this.options.webPath, 'scripts'), { recursive: true }).catch(() => {})
-    console.log('here is ok');
 
     const scriptRoot = resolve(cwd(), 'src', 'scripts');
     const styleRoot = resolve(cwd(), 'src', 'styles');
-    console.log((await readdir(scriptRoot)).map(v => resolve(scriptRoot, v)));
-    console.log('here is ok');
 
     await build({
       target: 'esnext',
