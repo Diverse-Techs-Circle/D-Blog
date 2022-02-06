@@ -20,7 +20,7 @@ if ( !authorName || !authorURL || !PRNumber || !PAT ) {
         'Authorization': `token ${PAT}`
       }
     })).body))
-      .filter(v => v.status === 'added')
+      .filter(v => v.status === 'added' || v.status === 'modified')
       .map(v => v.filename)
       .filter(v => extname(v) === '.md')
       .map(v => resolve(cwd(), v))
