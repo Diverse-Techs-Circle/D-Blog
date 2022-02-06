@@ -74,7 +74,7 @@ export class DBlogPage {
 
       const linkcardMatch = v.data.match(/\[linkcard\]\((http.+)\)/);
       if(linkcardMatch) {
-        return `<a class="linkcard" href="${linkcardMatch[1]}">${
+        return `<a class="linkcard" href="${linkcardMatch[1]}" target="_blank" rel="noopener noreferrer">${
           wrapOn('p', [await getGlobalPageTitle(linkcardMatch[1])], ['title']) +
           wrapOn('p', [(linkcardMatch[1].match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/) ?? ['', ''])[1]], ['domain'])
         }</a>`;
