@@ -1,3 +1,4 @@
+import { DBlogInstance } from "../instance";
 import { fatal, warn } from "../util/fatal";
 import { annotateCheck, IAnnotate, ILineData } from "./annotateParse";
 import { DBlogHTML } from "./header";
@@ -12,7 +13,7 @@ export class DBlogPage {
   content: ILineData[];
   permalink: string;
   postedAt: IDay | null;
-  constructor(page: markdown, public filePath: string) {
+  constructor(page: markdown, public filePath: string, public instance: DBlogInstance) {
 
 
     const annotateKey = ['title', 'permalink', 'postedAt'];
@@ -65,12 +66,18 @@ export class DBlogPage {
       return `<p>${textDecoration(v.data)}</p>`;
     }).join('');
 
-    const html = new DBlogHTML(this.title, 'ja');
+    const html = new DBlogHTML(this.title + ' | D-Blog', 'ja');
     html.addMeta({ charset: 'UTF-8' });
     html.addMeta({ name: 'generator', content: 'D-Blog' });
     html.addMeta({ name: 'theme-color', content: '#0073ff' });
     html.addMeta({ name: 'creator', content: 'D-Techs Circle' });
-
+    html.withOGP({
+      type: 'article',
+      url: this.instance.options.siteUrl + this.permalink,
+      title: this.title,
+      site_name: 'D-Blog',
+      locale: 'ja_JP'
+    });
     return html.render(body);
   }
 }
