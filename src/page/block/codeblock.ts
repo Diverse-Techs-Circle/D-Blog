@@ -1,4 +1,5 @@
 import { BlockParsed, parseBlock, resolveIndent } from ".";
+import { escapeHTML } from "../../util/escapeHTML";
 import { ILineData } from "../annotateParse";
 
 export function parseCodeBlock(code: (ILineData | BlockParsed)[]): BlockParsed[] {
@@ -15,7 +16,7 @@ export function parseCodeBlock(code: (ILineData | BlockParsed)[]): BlockParsed[]
           .filter((_, i) => i > 0 && i < resolved.length - 1)
           .map(v => v.data)
           .map((v, i) =>
-            `<div class="line"><div class="linenumber"><code>${i}</code></div><pre><code>${v}</code></pre></div>`
+            `<div class="line"><div class="linenumber"><code>${i}</code></div><pre><code>${escapeHTML(v)}</code></pre></div>`
           ),
         `<div class="lang">${lang}</div>`,
         `</section>`,
