@@ -1,6 +1,4 @@
-//@D-Blog ---
-author: AsPulse@https://avatars.githubusercontent.com/u/84216737?v=4
-// ---
+---
 name: 記事の追加
 about: Add an article to D-Blog
 ---
