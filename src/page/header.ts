@@ -54,10 +54,22 @@ function buildOGP(ogp: OGP): {prefix: string, data: string[]} {
 export class DBlogHTML {
   meta: IMetaData[] = [];
   ogp: null | OGP = null;
+
+  styleFiles: string[] = [];
+  jsFiles: string[] = [];
+
   constructor(public title: string, public lang: 'en' | 'ja'){}
 
   addMeta(meta: IMetaData) {
     this.meta.push(meta);
+  }
+
+  addStyle(path: string) {
+    this.styleFiles.push(path.replace(/\\/g, '/'));
+  }
+
+  addScript(path: string) {
+    this.jsFiles.push(path.replace(/\\/g, '/'));
   }
 
   withOGP(ogp: OGP) {
@@ -70,6 +82,8 @@ export class DBlogHTML {
       '<!DOCTYPE html>',
       `<html lang="${this.lang}">`,
       ogp ? `<head prefix="${ogp.prefix}">` : '<head>',
+      ...(this.styleFiles.map(v => `<link rel="stylesheet" href="${v}">`)),
+      ...(this.jsFiles.map(v => `<script src="${v}" defer />`)),
       ...this.meta.map(v => buildMeta(v)),
       ...(ogp ? ogp.data : []),
       `<title>${this.title}</title>`,

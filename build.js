@@ -6,7 +6,8 @@ build({
   target: 'esnext',
   outdir: resolve(__dirname, 'dist'),
   bundle: true,
-  minify: true,
+  external: ['estrella'],
+  minify: false,
   sourcemap: true,
   tslint: true,
   platform: 'node'

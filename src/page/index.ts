@@ -1,3 +1,4 @@
+import { join } from "path";
 import { DBlogInstance } from "../instance";
 import { fatal, warn } from "../util/fatal";
 import { annotateCheck, IAnnotate, ILineData } from "./annotateParse";
@@ -77,11 +78,13 @@ export class DBlogPage {
     html.addMeta({ name: 'creator', content: 'D-Techs Circle' });
     html.withOGP({
       type: 'article',
-      url: this.instance.options.siteUrl + this.permalink,
+      url: this.instance.options.siteUrl + 'article/' + this.permalink,
       title: this.title,
       site_name: 'D-Blog',
       locale: 'ja_JP'
     });
+    html.addStyle(join(this.instance.options.domainPrefix, 'styles', 'article.css'));
+    html.addScript(join(this.instance.options.domainPrefix, 'scripts', 'article.js'));
     return html.render(body);
   }
 }
