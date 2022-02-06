@@ -1,5 +1,6 @@
 @forward 'components/common.scss';
 @use 'util/mq.scss' as mq;
+@use 'util/color.scss' as c;
 
 #content {
   article {
@@ -9,7 +10,32 @@
     @include mq.narrowWidth() {
       border-radius: 0;
     }
-    box-shadow: 0 0 8px rgb(0 0 0 / 8%);
+    a {
+      display: flex;
+      padding: 1.7em 1.25em;
+      border-radius: 3px;
+      border: 1px solid mix(c.$little-line, c.$dtechs-official, 90%);
+      transition: .3s ease-out all;
+      &:hover {
+        border-color: white;
+        box-shadow: 0 0 4px rgba(c.$dtechs-official, 0.5);
+      }
+      flex-direction: column;
+      background-color: rgb(200 200 200 / 1%);
+      text-decoration: none;
+      color: black;
+      p {
+        margin: 0;
+        &.title {
+          margin-bottom: 0.2em;
+        }
+        &.domain {
+          color: gray;
+          font-size: 60%;
+        }
+      }
+    }
+    box-shadow: 0 0 8px rgb(0 0 0 / 5%);
   }
 
   section#title-wrapper {
