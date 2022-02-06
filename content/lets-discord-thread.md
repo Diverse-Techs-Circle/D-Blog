@@ -1,8 +1,12 @@
-//--- @D-Blog
+//hello!
+
+
+//@D-Blog ---
 title: Discordの新機能、スレッドを議論に活用しよう
 permalink: lets-discord-thread
 postedAt: 2022/2/5
 //---
+
 
 ## スレッドとは？何が便利なの？
 メッセージと紐付けて通常のチャンネルの下に子チャンネルのようなものを作ることができる機能。

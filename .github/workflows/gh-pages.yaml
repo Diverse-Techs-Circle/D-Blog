@@ -26,6 +26,8 @@ jobs:
       run: node ./build.js
     - name: Build Page
       run: node ./dist/index.js
+    - name: Remove gitkeep
+      run: rm ./www/.gitkeep
     - name: Deploy GitHub-pages
       uses: peaceiris/actions-gh-pages@v3
       with:

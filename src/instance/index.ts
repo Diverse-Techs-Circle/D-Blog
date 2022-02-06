@@ -1,5 +1,7 @@
-import { copyFile, mkdir, readdir, rm } from "fs/promises";
-import { basename, extname, join, resolve } from "path";
+import { mkdir, readdir, rm, readFile, writeFile } from "fs/promises";
+import { extname, join, resolve } from "path";
+import { DBlogPage } from "../page";
+import { parseStopper } from "../util/fatal";
 
 export interface DBlogInstanceOptions {
   contentPath: string,
@@ -11,15 +13,21 @@ export class DBlogInstance {
 
   async build() {
     const contents = await getAllFilesInJoin(this.options.contentPath, ['.md']);
-    await rm(this.options.webPath, { recursive: true });
-    await Promise.all(contents.map(async v => {
-      const buildAt = resolve(this.options.webPath, basename(v.dirent.name, extname(v.dirent.name)));
-      await mkdir(buildAt, {recursive: true}).catch(() => {});
-      copyFile(
-        resolve(v.basePath, v.directory, v.dirent.name),
-        resolve(buildAt, 'index.html')
-        );
-    }));
+    await rm(this.options.webPath, { recursive: true }).catch(() => {});
+    await mkdir(this.options.webPath, { recursive: true }).catch(() => {});
+    await writeFile(resolve(this.options.webPath, '.gitkeep'), '');
+    const pages = contents
+      .map(v => resolve(v.basePath, v.directory, v.dirent.name))
+      .map(async v => new DBlogPage(
+        (await readFile(v)).toString(), v
+      ));
+    const renderer = (await Promise.all(pages)).map(async v => {
+      const target = resolve(this.options.webPath, v.permalink);
+      await mkdir(target, { recursive: true }).catch(() => {});
+      writeFile(resolve(target, 'index.html'), await v.render());
+    });
+    parseStopper();
+    await Promise.all(renderer);
   }
 }
 
