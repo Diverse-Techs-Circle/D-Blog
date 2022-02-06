@@ -68,10 +68,10 @@ export class DBlogPage {
 
 export function textDecoration(text: markdown): html {
   return text
-    .replace(/\*\*(.+)\*\*/g, '<b>$</b>' )
-    .replace(/\*(.+)\*/g, '<i>$</i>' )
-    .replace(/\_\_(.+)\_\_/g, '<u>$</u>' )
-    .replace(/\~\~(.+)\~\~/g, '<s>$</s>' )
+    .replace(/(?<!\\)\*(?<!\\)\*(.+)(?<!\\)\*(?<!\\)\*\*/g, '<b>$1</b>' )
+    .replace(/(?<!\\)\*(.+)(?<!\\)\*/g, '<i>$1</i>' )
+    .replace(/\_\_(.+)\_\_/g, '<u>$1</u>' )
+    .replace(/\~\~(.+)\~\~/g, '<s>$1</s>' )
     .replace(/\\\*/g, '*' )
     .replace(/\\\_/g, '_' )
     .replace(/\\\~/g, '~' );
