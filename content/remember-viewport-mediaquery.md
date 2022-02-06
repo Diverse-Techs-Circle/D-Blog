@@ -2,7 +2,7 @@
 title: メディアクエリが効かないときはビューポートの指定忘れを疑え！
 permalink: remember-viewport-mediaquery
 postedAt: 2022/02/06
-author:
+author: AsPulse@https://avatars.githubusercontent.com/u/84216737?v=4
 //---
 
 ## TL;DR
