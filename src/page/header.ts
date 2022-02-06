@@ -13,6 +13,15 @@ type IMetaData =
   { name: 'googlebot' | 'robots' | 'slurp', content: ('index' | 'noindex' | 'follow' | 'nofollow' | 'none' | 'noodp' | 'noarchive' | 'nosnippet' | 'noimageindex' | 'nocache')[] } |
   { name: 'viewport', content: ViewportContent[] };
 
+type OGP = {
+  type: 'website' | 'article',
+  url: string,
+  title: string,
+  site_name: string,
+  locale: 'ja_JP',
+  description?: string,
+};
+
 function buildMeta(meta: IMetaData): string {
   if ( 'charset' in meta ) {
     return `<meta charset="${meta.charset}">`;
@@ -29,20 +38,40 @@ function buildMeta(meta: IMetaData): string {
   return `<meta name="${meta.name}" content="${meta.content}">`;
 }
 
+function buildOGP(ogp: OGP): {prefix: string, data: string[]} {
+  return {
+    prefix: `og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# ${ogp.type}: http://ogp.me/ns/${ogp.type}#`,
+    data:  [
+      `<meta property="og:url" content="${ogp.url}">`,
+      `<meta property="og:title" content="${ogp.title}">`,
+      ...ogp.description ? [`<meta property="og:description" content="${ogp.description}">`] : [],
+      `<meta property="og:site_name" content="${ogp.site_name}">`,
+      `<meta property="og:locale" content="${ogp.locale}">`,
+    ]
+  };
+}
+
 export class DBlogHTML {
   meta: IMetaData[] = [];
+  ogp: null | OGP = null;
   constructor(public title: string, public lang: 'en' | 'ja'){}
 
   addMeta(meta: IMetaData) {
     this.meta.push(meta);
   }
 
+  withOGP(ogp: OGP) {
+    this.ogp = ogp;
+  }
+
   render(body: string) {
+    const ogp = this.ogp === null ? null : buildOGP(this.ogp);
     return [
       '<!DOCTYPE html>',
       `<html lang="${this.lang}">`,
-      '<head>',
+      ogp ? `<head prefix="${ogp.prefix}">` : '<head>',
       ...this.meta.map(v => buildMeta(v)),
+      ...(ogp ? ogp.data : []),
       `<title>${this.title}</title>`,
       '</head>',
       '<body>',
