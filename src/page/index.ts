@@ -165,7 +165,7 @@ export function getPostedAt(toParse: IAnnotate[], filePath: string, annotateLine
 
 
 export function getAuthor(toParse: IAnnotate[], filePath: string, annotateLine: number): IAuthor | undefined {
-  const author = toParse.find(v => v.key === 'title');
+  const author = toParse.find(v => v.key === 'author');
   if ( !author ) {
     fatal(filePath, annotateLine, ['作者アノテートが不足しています。', 'author: 作者@アイコンのURL のように指定してください。']);
     return undefined;
