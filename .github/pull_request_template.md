@@ -1,8 +1,3 @@
----
-name: 記事の追加
-about: Add an article to D-Blog
----
-
 ## TL;DR
 記事「ここに記事タイトルを入れてください」を執筆しました。
 
