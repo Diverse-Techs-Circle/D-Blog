@@ -1,12 +1,15 @@
 import { mkdir, readdir, rm, readFile, writeFile } from "fs/promises";
-import { extname, join, resolve } from "path";
+import { basename, extname, join, resolve } from "path";
 import { DBlogPage } from "../page";
 import { parseStopper } from "../util/fatal";
-
+import { build } from "estrella";
+import { compile } from "sass";
+import { cwd } from "process";
 export interface DBlogInstanceOptions {
   contentPath: string,
   webPath: string,
-  siteUrl: string
+  siteUrl: string,
+  domainPrefix: string
 }
 
 export class DBlogInstance {
@@ -17,6 +20,33 @@ export class DBlogInstance {
     await rm(this.options.webPath, { recursive: true }).catch(() => {});
     await mkdir(this.options.webPath, { recursive: true }).catch(() => {});
     await writeFile(resolve(this.options.webPath, '.gitkeep'), '');
+
+    await mkdir(resolve(this.options.webPath, 'scripts'), { recursive: true }).catch(() => {})
+    console.log('here is ok');
+
+    const scriptRoot = resolve(cwd(), 'src', 'scripts');
+    const styleRoot = resolve(cwd(), 'src', 'styles');
+    console.log((await readdir(scriptRoot)).map(v => resolve(scriptRoot, v)));
+    console.log('here is ok');
+
+    await build({
+      target: 'esnext',
+      entryPoints: (await readdir(scriptRoot)).map(v => resolve(scriptRoot, v)),
+      bundle: true,
+      minify: true,
+      outdir: resolve(this.options.webPath, 'scripts'),
+      sourcemap: false,
+      platform: 'browser'
+    });
+
+    await mkdir(resolve(this.options.webPath, 'styles')).catch(() => {});
+    await Promise.all((await readdir(styleRoot)).map(async v => {
+      const sass = compile(resolve(styleRoot, v), {
+          style: 'compressed'
+      });
+      await writeFile(resolve(this.options.webPath, 'styles', `${basename(v, extname(v))}.css`), sass.css);
+    }))
+
     const pages = contents
       .map(v => resolve(v.basePath, v.directory, v.dirent.name))
       .map(async v => new DBlogPage(
