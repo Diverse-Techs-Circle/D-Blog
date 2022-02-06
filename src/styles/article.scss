@@ -13,10 +13,12 @@
     a {
       display: flex;
       padding: 1.7em 1.25em;
+      margin: 2em 0;
       border-radius: 3px;
       border: 1px solid mix(c.$little-line, c.$dtechs-official, 90%);
-      transition: .3s ease-out all;
+      transition: .35s c.$out-bezier all;
       &:hover {
+        transform: scale(1.02);
         border-color: white;
         box-shadow: 0 0 4px rgba(c.$dtechs-official, 0.5);
       }
