@@ -7,21 +7,24 @@ export type markdown = string;
 export type html = string;
 
 interface IDay { year: number, month: number, day: number }
+interface IAuthor { name: string, url: string }
 
 export class DBlogPage {
   title: string;
   content: ILineData[];
   permalink: string;
   postedAt: IDay | null;
+  author: IAuthor | null;
   constructor(page: markdown, public filePath: string, public instance: DBlogInstance) {
 
 
-    const annotateKey = ['title', 'permalink', 'postedAt'];
+    const annotateKey = ['title', 'permalink', 'postedAt', 'author'];
     const parsed = annotateCheck(page, filePath);
     this.content = [];
     this.title = '';
     this.permalink = '';
     this.postedAt = null;
+    this.author = null;
     if ( parsed === null ) {
       fatal(filePath, 1, [
         'D-Blogアノテートが不足しています。',
@@ -43,6 +46,7 @@ export class DBlogPage {
       this.title = getTitle(toParse, filePath, firstLine) ?? this.title;
       this.permalink = getPermalink(toParse, filePath, firstLine) ?? this.permalink;
       this.postedAt = getPostedAt(toParse, filePath, firstLine) ?? this.postedAt;
+      this.author = getAuthor(toParse, filePath, firstLine) ?? this.author;
     }
   }
 
@@ -160,3 +164,16 @@ export function getPostedAt(toParse: IAnnotate[], filePath: string, annotateLine
 }
 
 
+export function getAuthor(toParse: IAnnotate[], filePath: string, annotateLine: number): IAuthor | undefined {
+  const author = toParse.find(v => v.key === 'title');
+  if ( !author ) {
+    fatal(filePath, annotateLine, ['作者アノテートが不足しています。', 'author: 作者@アイコンのURL のように指定してください。']);
+    return undefined;
+  }
+  const match = author.value.match(/(.+)@(https:\/\/(.+))/);
+  if ( !match ) {
+    fatal(filePath, author.lineNumber, ['作者アノテートが不適切です。', 'author: 作者@アイコンのURL のように指定してください。', 'この行を削除すると、GitHub Actionが自動生成します。'])
+    return undefined;
+  }
+  return { name: match[1], url: match[2] };
+}

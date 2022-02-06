@@ -41,6 +41,12 @@ if ( !authorName || !authorURL || !PRNumber || !PAT ) {
             )
         };
       } else {
+        if ( lines.filter(v => beginAnnotate.line < v.line && v.line < finishAnnotate.line).some(v => v.data.startsWith('author: ')) ) {
+          return {
+            filePath: pathData.filePath,
+            data: lines.map(v => v.data)
+          }
+        }
         return {
           filePath: pathData.filePath,
           data: lines.flatMap<string>(v =>
