@@ -1,10 +1,15 @@
 @use '../util/color.scss' as c;
+@use '../util/mq.scss' as mq;
 
 body {
   background-color: c.$background;
+  margin: 0;
 }
 
 #content {
   max-width: 800px;
   margin: 0 auto;
+  @include mq.narrowWidth() {
+    width: 100%;
+  }
 }

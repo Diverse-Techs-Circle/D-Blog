@@ -78,6 +78,15 @@ export class DBlogPage {
     html.addMeta({ name: 'generator', content: 'D-Blog' });
     html.addMeta({ name: 'theme-color', content: '#0073ff' });
     html.addMeta({ name: 'creator', content: 'D-Techs Circle' });
+    html.addMeta({
+      name: 'viewport',
+      content: [
+        { key: 'width', value: 'device-width' },
+        { key: 'initial-scale', value: 1 },
+        { key: 'maximum-scale', value: 1 },
+        { key: 'minimum-scale', value: 1 },
+      ]
+    })
     html.withOGP({
       type: 'article',
       url: this.instance.options.siteUrl + 'article/' + this.permalink,
