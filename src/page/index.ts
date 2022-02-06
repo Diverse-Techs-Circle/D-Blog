@@ -77,7 +77,7 @@ export class DBlogPage {
     html.addMeta({ name: 'creator', content: 'D-Techs Circle' });
     html.withOGP({
       type: 'article',
-      url: this.instance.options.siteUrl + this.permalink,
+      url: this.instance.options.siteUrl + 'article/' + this.permalink,
       title: this.title,
       site_name: 'D-Blog',
       locale: 'ja_JP'

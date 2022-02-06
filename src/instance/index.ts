@@ -23,7 +23,7 @@ export class DBlogInstance {
         (await readFile(v)).toString(), v, this
       ));
     const renderer = (await Promise.all(pages)).map(async v => {
-      const target = resolve(this.options.webPath, v.permalink);
+      const target = resolve(this.options.webPath, 'article', v.permalink);
       await mkdir(target, { recursive: true }).catch(() => {});
       writeFile(resolve(target, 'index.html'), await v.render());
     });
