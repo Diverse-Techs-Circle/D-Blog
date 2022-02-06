@@ -1,5 +1,6 @@
 import { fatal, warn } from "../util/fatal";
 import { annotateCheck, IAnnotate, ILineData } from "./annotateParse";
+import { DBlogHTML } from "./header";
 
 export type markdown = string;
 export type html = string;
@@ -45,7 +46,7 @@ export class DBlogPage {
   }
 
   async render(): Promise<html> {
-    return this.content.map(v => {
+    const body = this.content.map(v => {
       if(v.data.split('').every(v => [' '].includes(v))) {
         return ``
       }
@@ -63,6 +64,14 @@ export class DBlogPage {
       }
       return `<p>${textDecoration(v.data)}</p>`;
     }).join('');
+
+    const html = new DBlogHTML(this.title, 'ja');
+    html.addMeta({ charset: 'UTF-8' });
+    html.addMeta({ name: 'generator', content: 'D-Blog' });
+    html.addMeta({ name: 'theme-color', content: '#0073ff' });
+    html.addMeta({ name: 'creator', content: 'D-Techs Circle' });
+
+    return html.render(body);
   }
 }
 
