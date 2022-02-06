@@ -33,7 +33,7 @@ MDN公式のメディアクエリのページでは...
 ```html
 <meta name="viewport" content="width=device-width">
 ```
-意味はまんまで、`viewportのwidth`を`device-width`にするよ...って感じですね。
+意味はまんまで、`viewport`の`width`を`device-width`にするよ...って感じですね。
 Emmet(補完ツール)で出したHTMLの雛形にもついてきます。
 今どきの開発をしていれば...これはよっぽどついてる...はずなんだけど...
 
