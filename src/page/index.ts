@@ -1,6 +1,7 @@
 import { join } from "path";
 import { DBlogInstance } from "../instance";
 import { fatal, warn } from "../util/fatal";
+import { wrapOn } from "../util/html";
 import { annotateCheck, IAnnotate, ILineData } from "./annotateParse";
 import { DBlogHTML } from "./header";
 
@@ -60,13 +61,13 @@ export class DBlogPage {
       const headerTagSharp = splitted[0] ?? '';
       if(headerTagSharp !== '' && headerTagSharp.split('').every(v => v === '#')) {
         const level = headerTagSharp.length;
-        if ( level > 6 ) {
+        if ( level > 5 ) {
           fatal(this.filePath, v.line, [
-            'headerタグは、レベル1からレベル6までしか使えません。',
-            '(#の数は6個以下になります)'
+            'headerタグは、レベル1からレベル5までしか使えません。',
+            '(#の数は5個以下になります)'
           ]);
         }
-        return `<h${level}>${textDecoration(splitted.filter((_, i) => i !== 0).join(' '))}</h${level}>`;
+        return `<h${level + 1}>${textDecoration(splitted.filter((_, i) => i !== 0).join(' '))}</h${level}>`;
       }
       return `<p>${textDecoration(v.data)}</p>`;
     }).join('');
@@ -85,7 +86,11 @@ export class DBlogPage {
     });
     html.addStyle(this.instance.options.relativePath ? '../../styles/article.css' : join(this.instance.options.domainPrefix, 'styles', 'article.css'));
     html.addScript(this.instance.options.relativePath ? '../../scripts/article.js' : join(this.instance.options.domainPrefix, 'scripts', 'article.js'));
-    return html.render(body);
+    const article = wrapOn('article', [body]);
+    const title = wrapOn('section', [
+      wrapOn('h1', [this.title])
+    ], undefined, 'title-wrapper');
+    return html.render(wrapOn('div', [title, article], undefined, 'content'));
   }
 }
 
