@@ -13,7 +13,7 @@ type IMetaData =
   { name: 'googlebot' | 'robots' | 'slurp', content: ('index' | 'noindex' | 'follow' | 'nofollow' | 'none' | 'noodp' | 'noarchive' | 'nosnippet' | 'noimageindex' | 'nocache')[] } |
   { name: 'viewport', content: ViewportContent[] };
 
-export function buildMeta(meta: IMetaData): string {
+function buildMeta(meta: IMetaData): string {
   if ( 'charset' in meta ) {
     return `<meta charset="${meta.charset}">`;
   }
@@ -29,7 +29,7 @@ export function buildMeta(meta: IMetaData): string {
   return `<meta name="${meta.name}" content="${meta.content}">`;
 }
 
-class DBlogHTML {
+export class DBlogHTML {
   meta: IMetaData[] = [];
   constructor(public title: string, public lang: 'en' | 'ja'){}
 
