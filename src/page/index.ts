@@ -41,7 +41,6 @@ export class DBlogPage {
       this.title = getTitle(toParse, filePath, firstLine) ?? this.title;
       this.permalink = getPermalink(toParse, filePath, firstLine) ?? this.permalink;
       this.postedAt = getPostedAt(toParse, filePath, firstLine) ?? this.postedAt;
-      console.log(this);
     }
   }
 
@@ -49,6 +48,18 @@ export class DBlogPage {
     return this.content.map(v => v.data).join('\n');
   }
 }
+
+export function textDecoration(text: markdown): html {
+  return text
+    .replace(/\*\*(.+)\*\*/g, '<b>$</b>' )
+    .replace(/\*(.+)\*/g, '<i>$</i>' )
+    .replace(/\_\_(.+)\_\_/g, '<u>$</u>' )
+    .replace(/\~\~(.+)\~\~/g, '<s>$</s>' )
+    .replace(/\\\*/g, '*' )
+    .replace(/\\\_/g, '_' )
+    .replace(/\\\~/g, '~' );
+}
+
 
 export function getTitle(toParse: IAnnotate[], filePath: string, annotateLine: number): string | undefined {
   const title = toParse.find(v => v.key === 'title');
