@@ -45,7 +45,24 @@ export class DBlogPage {
   }
 
   async render(): Promise<html> {
-    return this.content.map(v => v.data).join('\n');
+    return this.content.map(v => {
+      if(v.data.split('').every(v => [' '].includes(v))) {
+        return ``
+      }
+      const splitted = v.data.split(' ');
+      const headerTagSharp = splitted[0] ?? '';
+      if(headerTagSharp !== '' && headerTagSharp.split('').every(v => v === '#')) {
+        const level = headerTagSharp.length;
+        if ( level > 6 ) {
+          fatal(this.filePath, v.line, [
+            'headerタグは、レベル1からレベル6までしか使えません。',
+            '(#の数は6個以下になります)'
+          ]);
+        }
+        return `<h${level}>${textDecoration(splitted.filter((_, i) => i !== 0).join(' '))}</h${level}>`;
+      }
+      return `<p>${textDecoration(v.data)}</p>`;
+    }).join('');
   }
 }
 
