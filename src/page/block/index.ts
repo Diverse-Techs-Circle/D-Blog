@@ -1,6 +1,6 @@
 import { ILineData } from "../annotateParse";
 
-type operatorFunc =  (string: string) => boolean;
+type operatorFunc = (string: string) => boolean;
 export interface BlockParsed extends ILineData {
   needToParse: boolean;
 }
@@ -8,7 +8,7 @@ export function parseBlock(code: (ILineData | BlockParsed)[], startCondition: op
   return parseBlockStep(code.map(v => 'needToParse' in v ? v : ({...v, needToParse: true})), startCondition, endCondition, parser);
 }
 
-export function parseBlockStep(code: BlockParsed[], startCondition: operatorFunc, endCondition: operatorFunc, parser: (v: ILineData[]) => string): BlockParsed[] {
+function parseBlockStep(code: BlockParsed[], startCondition: operatorFunc, endCondition: operatorFunc, parser: (v: ILineData[]) => string): BlockParsed[] {
 
   const codeWithIndex = code.map((v, i) => ( {...v, index: i} ));
   const startRanges = codeWithIndex.filter(v => startCondition(v.data));
@@ -34,4 +34,21 @@ export function parseBlockStep(code: BlockParsed[], startCondition: operatorFunc
     ...afterBlock.map(v => ({ data: v.data, line: v.line, needToParse: v.needToParse })),
   ]
   return parseBlockStep(newCode, startCondition, endCondition, parser);
+}
+
+export function resolveIndent(code: ILineData[]): ILineData[] {
+  const withSpace = code.map(v => {
+    const data = v.data.replace(/\t/g, '  ');
+    const match = data.match(/^( *)(.*)$/) ?? ['', ''];
+    return {
+      data,
+      spaces: match[1].length,
+      line: v.line,
+    }
+  });
+  const minus = withSpace[0].spaces;
+  return withSpace.map(v => ({
+    data: `${[...new Array(Math.max(v.spaces - minus, 0))]}${v.data}`,
+    line: v.line,
+  }));
 }
