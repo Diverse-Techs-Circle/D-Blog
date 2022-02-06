@@ -6,7 +6,8 @@ const instance = new DBlogInstance({
   contentPath: resolve(cwd(), 'content'),
   webPath: resolve(cwd(), 'www'),
   siteUrl: 'https://diverse-techs-circle.github.io/D-Blog/',
-  domainPrefix: '/D-Blog'
+  domainPrefix: '/D-Blog',
+  relativePath: true
 });
 
 void instance.build();

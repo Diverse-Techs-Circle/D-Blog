@@ -9,7 +9,8 @@ export interface DBlogInstanceOptions {
   contentPath: string,
   webPath: string,
   siteUrl: string,
-  domainPrefix: string
+  domainPrefix: string,
+  relativePath: boolean
 }
 
 export class DBlogInstance {
@@ -28,16 +29,16 @@ export class DBlogInstance {
 
     await build({
       target: 'esnext',
-      entryPoints: (await readdir(scriptRoot)).map(v => resolve(scriptRoot, v)),
+      entryPoints: (await readdir(scriptRoot)).map(v => resolve(scriptRoot, v)).filter(v => v.endsWith('.ts')),
       bundle: true,
       minify: true,
       outdir: resolve(this.options.webPath, 'scripts'),
       sourcemap: false,
       platform: 'browser'
-    });
+    }).catch(console.error);
 
     await mkdir(resolve(this.options.webPath, 'styles')).catch(() => {});
-    await Promise.all((await readdir(styleRoot)).map(async v => {
+    await Promise.all((await readdir(styleRoot)).filter(v => v.endsWith('.scss')).map(async v => {
       const sass = compile(resolve(styleRoot, v), {
           style: 'compressed'
       });

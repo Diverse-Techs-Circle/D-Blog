@@ -1,0 +1,10 @@
+@use '../util/color.scss' as c;
+
+body {
+  background-color: c.$background;
+}
+
+#content {
+  max-width: 800px;
+  margin: 0 auto;
+}

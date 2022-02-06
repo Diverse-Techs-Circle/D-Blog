@@ -6,7 +6,7 @@ build({
   target: 'esnext',
   outdir: resolve(__dirname, 'dist'),
   bundle: true,
-  external: ['estrella'],
+  external: ['estrella', 'scss'],
   minify: false,
   sourcemap: true,
   tslint: true,
