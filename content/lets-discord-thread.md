@@ -3,7 +3,6 @@ title: Discordの新機能、スレッドを議論に活用しよう
 permalink: lets-discord-thread
 postedAt: 2022/2/5
 author:
-author: AsPulse@https://avatars.githubusercontent.com/u/84216737?v=4
 //---
 
 ## スレッドとは？何が便利なの？

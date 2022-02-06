@@ -47,6 +47,15 @@ if ( !authorName || !authorURL || !PRNumber || !PAT ) {
             data: lines.map(v => v.data)
           }
         }
+        const authorLine = lines.filter(v => beginAnnotate.line < v.line && v.line < finishAnnotate.line).find(v => v.data.startsWith('author:'));
+        if ( authorLine !== undefined ) {
+          return {
+            filePath: pathData.filePath,
+            data: lines.flatMap<string>(v =>
+              v.line === authorLine.line ? [`author: ${authorName}@${authorURL}`] : [v.data]
+            )
+          };
+        }
         return {
           filePath: pathData.filePath,
           data: lines.flatMap<string>(v =>
