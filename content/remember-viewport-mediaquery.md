@@ -2,7 +2,7 @@
 title: CSSは完璧なのにメディアクエリが効かない時はviewport確認して！な話
 permalink: remember-viewport-mediaquery
 postedAt: 2022/02/06
-author:
+author: AsPulse@https://avatars.githubusercontent.com/u/84216737?v=4
 //---
 
 ## TL;DR
