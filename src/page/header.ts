@@ -33,6 +33,10 @@ class DBlogHTML {
   meta: IMetaData[] = [];
   constructor(public title: string, public lang: 'en' | 'ja'){}
 
+  addMeta(meta: IMetaData) {
+    this.meta.push(meta);
+  }
+
   render(body: string) {
     return [
       '<!DOCTYPE html>',
