@@ -29,10 +29,10 @@ export function annotateCheck(data: string, fileName: string): { annotate: IAnno
   }), content };
 }
 
-function isAnnotateStart(data: string): boolean {
+export function isAnnotateStart(data: string): boolean {
   return /^((| )*)\/\/( |)@D-Blog( ||-)*$/.test(data);
 }
 
-function isAnnotateFinish(data: string): boolean {
+export function isAnnotateFinish(data: string): boolean {
   return /^((| )*)\/\/( ||-)*$/.test(data)
 }
