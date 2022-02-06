@@ -1,12 +1,14 @@
 @forward 'components/common.scss';
+@use 'util/mq.scss' as mq;
 
 #content {
-
   article {
     padding: 1.25em 3em;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 0 3px black;
+    @include mq.narrowWidth() {
+      border-radius: 0;
+    }
     box-shadow: 0 0 8px rgb(0 0 0 / 8%);
   }
 
