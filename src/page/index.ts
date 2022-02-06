@@ -78,6 +78,7 @@ export class DBlogPage {
     html.addMeta({ name: 'generator', content: 'D-Blog' });
     html.addMeta({ name: 'theme-color', content: '#0073ff' });
     html.addMeta({ name: 'creator', content: 'D-Techs Circle' });
+    html.addMeta({ name: 'robots', content: ['noindex', 'nofollow'] });
     html.addMeta({
       name: 'viewport',
       content: [
