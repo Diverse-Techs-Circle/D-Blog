@@ -124,7 +124,7 @@ export function textDecoration(text: markdown): html {
     .replace(/\_\_(.+?)\_\_/g, '<u>$1</u>' )
     .replace(/\~\~(.+?)\~\~/g, '<s>$1</s>' )
     .replace(/\~\~(.+?)\~\~/g, '<s>$1</s>' )
-    .replace(/\`(.+?)\`/g, '<code class="inline">$1</code>' )
+    .replace(/(?<!\\)\`(.+?)(?<!\\)\`/g, '<code class="inline">$1</code>' )
     .replace(/\\\*/g, '*' )
     .replace(/\\\_/g, '_' )
     .replace(/\\\~/g, '~' )
