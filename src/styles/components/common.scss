@@ -23,10 +23,15 @@ body {
   }
 
   section.codeblock {
+
     background-color: mix(rgb(40, 40, 40), c.$dtechs-official, 90%);
     border-radius: 3px;
     padding: 1em;
     position: relative;
+    margin-top: 0;
+    & + section.codeblock {
+      margin-top: 1em;
+    }
     z-index: 0;
     overflow: hidden;
     padding-top: 2.25em;

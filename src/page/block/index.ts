@@ -48,7 +48,7 @@ export function resolveIndent(code: ILineData[]): ILineData[] {
   });
   const minus = withSpace[0].spaces;
   return withSpace.map(v => ({
-    data: `${[...new Array(Math.max(v.spaces - minus, 0))]}${v.data}`,
+    data: `${[...new Array(Math.max(v.spaces - minus, 0))].map(() => ' ').join('')}${v.data}`,
     line: v.line,
   }));
 }
