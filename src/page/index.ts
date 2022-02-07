@@ -4,6 +4,7 @@ import { fatal, warn } from "../util/fatal";
 import { getGlobalPageTitle } from "../util/getTitle";
 import { wrapOn } from "../util/html";
 import { annotateCheck, IAnnotate, ILineData } from "./annotateParse";
+import { parseCodeBlock } from "./block/codeblock";
 import { DBlogHTML } from "./header";
 
 export type markdown = string;
@@ -54,7 +55,9 @@ export class DBlogPage {
   }
 
   async render(): Promise<html> {
-    const body = (await Promise.all(this.content.map(async v => {
+    const body = (await Promise.all(
+    parseCodeBlock(this.content).map(async v => {
+      if(!v.needToParse)   return v.data;
       if(v.data.split('').every(v => [' '].includes(v))) {
         return ``
       }
@@ -121,7 +124,7 @@ export function textDecoration(text: markdown): html {
     .replace(/\_\_(.+?)\_\_/g, '<u>$1</u>' )
     .replace(/\~\~(.+?)\~\~/g, '<s>$1</s>' )
     .replace(/\~\~(.+?)\~\~/g, '<s>$1</s>' )
-    .replace(/\`(.+?)\`/g, '<code class="inline">$1</code>' )
+    .replace(/(?<!\\)\`(.+?)(?<!\\)\`/g, '<code class="inline">$1</code>' )
     .replace(/\\\*/g, '*' )
     .replace(/\\\_/g, '_' )
     .replace(/\\\~/g, '~' )

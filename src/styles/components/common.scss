@@ -21,4 +21,55 @@ body {
       margin-top: 5em;
     }
   }
+
+  section.codeblock {
+
+    background-color: mix(rgb(40, 40, 40), c.$dtechs-official, 90%);
+    border-radius: 3px;
+    padding: 1em;
+    position: relative;
+    margin-top: 0;
+    & + section.codeblock {
+      margin-top: 1em;
+    }
+    z-index: 0;
+    overflow: hidden;
+    padding-top: 2.25em;
+    .line{
+      display: flex;
+      div.linenumber {
+        display: inline-flex;
+        padding-right: 1em;
+        color: gray;
+        user-select: none;
+      }
+      pre {
+        margin: 0;
+        color: white;
+      }
+    }
+    .lang {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 80%;
+
+      display: block;
+      padding: 0.25em 1em;
+      color: white;
+
+      &::after {
+        content: '';
+        background-color: mix(rgb(40, 40, 40), c.$dtechs-official, 10%);
+        transform: skewX(-30deg);
+        height: 100%;
+        width: calc(100% + 20px + 0.5em);
+        position: absolute;
+        left: -20px;
+        top: 0;
+        z-index: -1;
+        box-shadow: 0 0 6px rgba(black, 80%);
+      }
+    }
+  }
 }
