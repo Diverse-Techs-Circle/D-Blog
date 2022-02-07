@@ -71,18 +71,18 @@ export class DBlogPage {
             '(#の数は5個以下になります)'
           ]);
         }
-        return `<h${level + 1}>${textDecoration(splitted.filter((_, i) => i !== 0).join(' '))}</h${level}>`;
+        return `<h${level + 1}>${this.instance.useLetter(textDecoration(splitted.filter((_, i) => i !== 0).join(' ')))}</h${level}>`;
       }
 
       const linkcardMatch = v.data.match(/\[linkcard\]\((http.+)\)/);
       if(linkcardMatch) {
         return `<a class="linkcard" href="${linkcardMatch[1]}" target="_blank" rel="noopener noreferrer">${
-          wrapOn('p', [await getGlobalPageTitle(linkcardMatch[1])], ['title']) +
-          wrapOn('p', [(linkcardMatch[1].match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/) ?? ['', ''])[1]], ['domain'])
+          wrapOn('p', [this.instance.useLetter(await getGlobalPageTitle(linkcardMatch[1]))], ['title']) +
+          wrapOn('p', [this.instance.useLetter((linkcardMatch[1].match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/) ?? ['', ''])[1])], ['domain'])
         }</a>`;
       }
 
-      return `<p>${textDecoration(v.data)}</p>`;
+      return `<p>${textDecoration(this.instance.useLetter(v.data))}</p>`;
     }))).join('');
 
     const html = new DBlogHTML(this.title + ' | D-Blog', 'ja');
@@ -103,7 +103,7 @@ export class DBlogPage {
     html.withOGP({
       type: 'article',
       url: this.instance.options.siteUrl + 'article/' + this.permalink,
-      title: this.title,
+      title: this.instance.useLetter(this.title),
       site_name: 'D-Blog',
       locale: 'ja_JP'
     });

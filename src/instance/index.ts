@@ -14,7 +14,15 @@ export interface DBlogInstanceOptions {
 }
 
 export class DBlogInstance {
+
+  letterList: string[] = [];
+
   constructor(public options: DBlogInstanceOptions){}
+
+  useLetter(string: string) {
+    this.letterList = [...new Set([...string.split(''), ...this.letterList])];
+    return string;
+  }
 
   async build() {
     const contents = await getAllFilesInJoin(this.options.contentPath, ['.md']);
@@ -57,6 +65,8 @@ export class DBlogInstance {
     });
     parseStopper();
     await Promise.all(renderer);
+    parseStopper();
+    console.log(this.letterList.join(''));
   }
 }
 
