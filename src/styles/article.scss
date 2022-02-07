@@ -38,11 +38,11 @@
       }
     }
     code.inline {
-      background: rgb(240, 240, 240);
+      background: mix(rgb(250, 250, 250),c.$dtechs-official ,90%);
       color: egb(200, 200, 200);
       border-radius: 3px;
       margin: 0 0.5em;
-      padding: 0.2em 0.5em;
+      padding: 0.2em 0.65em;
       white-space: pre-wrap;
     }
     section.codeblock {
