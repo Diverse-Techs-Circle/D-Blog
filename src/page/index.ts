@@ -96,7 +96,7 @@ export class DBlogPage {
       content: [
         { key: 'width', value: 'device-width' },
         { key: 'initial-scale', value: 1 },
-        { key: 'maximum-scale', value: 1 },
+        { key: 'maximum-scale', value: 5 },
         { key: 'minimum-scale', value: 1 },
       ]
     })
