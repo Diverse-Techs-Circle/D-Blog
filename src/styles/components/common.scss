@@ -21,4 +21,17 @@ body {
       margin-top: 5em;
     }
   }
+
+  section.codeblock {
+    .line{
+      display: flex;
+      div.linenumber {
+        display: inline-flex;
+        padding-right: 1em;
+      }
+      pre {
+        margin: 0;
+      }
+    }
+  }
 }
