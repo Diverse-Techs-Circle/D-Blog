@@ -22,7 +22,7 @@ jobs:
       - name: Resolve dependencies
         run: yarn --check-files --frozen-lockfile --non-interactive
         env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.PAT }}
+          NPM_AUTH_TOKEN: ${{ secrets.PAT }}
       - name: Build TypeScript
         run: node ./build.js
       - name: Build Page
