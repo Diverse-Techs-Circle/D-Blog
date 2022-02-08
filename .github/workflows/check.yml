@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  # Run tests for any PRs.
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install node.js v16
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          always-auth: true
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@diverse-techs-circle"
+
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: node-v16-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+
+      - name: Install dependencies
+        run: yarn --check-files --frozen-lockfile --non-interactive
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PAT }}
+
+      - name: ESlint
+        run: yarn eslint .
