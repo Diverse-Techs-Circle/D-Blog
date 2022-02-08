@@ -8,29 +8,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '16'
-    - uses: actions/checkout@v2
-    - name: Cache node_modules
-      id: node_modules_cache_id
-      uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: node-v16-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
-    - name: Resolve dependencies
-      run: yarn --check-files --frozen-lockfile --non-interactive
-    - name: Build TypeScript
-      run: node ./buildAuthorSuggestion.js
-    - name: Suggestion Make
-      run: node ./dist/authorSuggestion.js
-      env:
-        PAT: ${{ github.token }}
-        PRNUMBER: ${{ github.event.pull_request.number }}
-        AUTHORNAME: ${{ github.event.pull_request.user.login }}
-        AUTHORURL: ${{ github.event.pull_request.user.avatar_url }}
-    - name: Suggestion Push
-      uses: reviewdog/action-suggester@v1
-      with:
-        tool_name: AuthorNameAnnotate
-        level: 'info'
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - uses: actions/checkout@v2
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: node-v16-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+      - name: Resolve dependencies
+        run: yarn --check-files --frozen-lockfile --non-interactive
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.PAT }}
+      - name: Build TypeScript
+        run: node ./buildAuthorSuggestion.js
+      - name: Suggestion Make
+        run: node ./dist/authorSuggestion.js
+        env:
+          PAT: ${{ github.token }}
+          PRNUMBER: ${{ github.event.pull_request.number }}
+          AUTHORNAME: ${{ github.event.pull_request.user.login }}
+          AUTHORURL: ${{ github.event.pull_request.user.avatar_url }}
+      - name: Suggestion Push
+        uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: AuthorNameAnnotate
+          level: "info"
