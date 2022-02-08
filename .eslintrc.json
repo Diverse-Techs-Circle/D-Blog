@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "overrides": [
+    {
+      "files": [
+        "*.js"
+      ],
+      "extends": "@diverse-techs-circle/eslint-config-js"
+    },
+    {
+      "files": [
+        "*.ts"
+      ],
+      "extends": "@diverse-techs-circle/eslint-config-ts"
+    }
+  ]
+}
