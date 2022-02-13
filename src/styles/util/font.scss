@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'mplus';
+  src: url('../assets/font/mplus-@{dblog-url-suffix}.woff2') format('woff2');
+}
+
+@mixin mplus() {
+  font-family: 'mplus', sans-serif;
+  transform: rotate(0.03deg);
+}
