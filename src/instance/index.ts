@@ -14,16 +14,20 @@ export interface DBlogInstanceOptions {
   relativePath: boolean,
   mplus: string
 }
+type letterType = 'MPlus-Bold' | 'MPlus-Regular';
 
 export class DBlogInstance {
 
-  letterList: string[] = [];
+  letterList: { weight: letterType, data: string[] }[] = [
+    { weight: 'MPlus-Bold', data: [] },
+    { weight: 'MPlus-Regular', data: [] },
+  ];
   urlsuffix = `-${new Date().getTime()}`;
 
   constructor(public options: DBlogInstanceOptions){}
 
-  useLetter(string: string) {
-    this.letterList = [...new Set([...string.split(''), ...this.letterList])];
+  useLetter(weight: letterType, string: string) {
+    this.letterList = this.letterList.map(v => v.weight === weight ? { weight, data: [...new Set([...string.split(''), ...v.data])] } : v);
     return string;
   }
 
@@ -70,21 +74,23 @@ export class DBlogInstance {
     await Promise.all(renderer);
     parseStopper();
 
-    const letters = this.letterList.join('');
+    const letters = this.letterList.map(v => ( { weight: v.weight, data: v.data.join('') } ));
     console.log(letters);
-    new Fontmin()
-        .use(Fontmin.glyph({
-            text: letters,
-            hinting: false         // keep ttf hint info (fpgm, prep, cvt). default = true
-        }))
-        .use(Fontmin.ttf2woff2())
-        .src(this.options.mplus)
-        .run(async (_, files) => {
-          const fontdir = resolve(this.options.webPath, 'assets', 'font');
-          await mkdir(fontdir, { recursive: true }).catch(() => {});
-          await writeFile(resolve(fontdir, `mplus${this.urlsuffix}.woff2`), files[0]._contents);
-        });
-
+    letters.forEach(v => {
+      console.log(join(this.options.mplus,`${v.weight}.ttf`));
+      new Fontmin()
+          .use(Fontmin.glyph({
+              text: v.data,
+              hinting: false         // keep ttf hint info (fpgm, prep, cvt). default = true
+          }))
+          .use(Fontmin.ttf2woff2())
+          .src(join(this.options.mplus,`${v.weight}.ttf`))
+          .run(async (_, files) => {
+            const fontdir = resolve(this.options.webPath, 'assets', 'font');
+            await mkdir(fontdir, { recursive: true }).catch(() => {});
+            await writeFile(resolve(fontdir, `${v.weight}${this.urlsuffix}.woff2`), files[0]._contents);
+          });
+    });
 
   }
 }

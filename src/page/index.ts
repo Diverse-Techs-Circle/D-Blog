@@ -71,18 +71,18 @@ export class DBlogPage {
             '(#の数は5個以下になります)'
           ]);
         }
-        return `<h${level + 1}>${this.instance.useLetter(textDecoration(splitted.filter((_, i) => i !== 0).join(' ')))}</h${level}>`;
+        return `<h${level + 1}>${this.instance.useLetter('MPlus-Bold', textDecoration(splitted.filter((_, i) => i !== 0).join(' '), this.instance))}</h${level}>`;
       }
 
       const linkcardMatch = v.data.match(/\[linkcard\]\((http.+)\)/);
       if(linkcardMatch) {
         return `<a class="linkcard" href="${linkcardMatch[1]}" target="_blank" rel="noopener noreferrer">${
-          wrapOn('p', [this.instance.useLetter(await getGlobalPageTitle(linkcardMatch[1]))], ['title']) +
-          wrapOn('p', [this.instance.useLetter((linkcardMatch[1].match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/) ?? ['', ''])[1])], ['domain'])
+          wrapOn('p', [this.instance.useLetter('MPlus-Regular', await getGlobalPageTitle(linkcardMatch[1]))], ['title']) +
+          wrapOn('p', [this.instance.useLetter('MPlus-Regular', (linkcardMatch[1].match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/) ?? ['', ''])[1])], ['domain'])
         }</a>`;
       }
 
-      return `<p>${textDecoration(this.instance.useLetter(v.data))}</p>`;
+      return `<p>${textDecoration(this.instance.useLetter('MPlus-Regular', v.data), this.instance)}</p>`;
     }))).join('');
 
     const html = new DBlogHTML(this.title + ' | D-Blog', 'ja');
@@ -100,10 +100,11 @@ export class DBlogPage {
         { key: 'minimum-scale', value: 1 },
       ]
     })
+    this.instance.useLetter('MPlus-Bold', this.title)
     html.withOGP({
       type: 'article',
       url: this.instance.options.siteUrl + 'article/' + this.permalink,
-      title: this.instance.useLetter(this.title),
+      title: this.instance.useLetter('MPlus-Regular', this.title),
       site_name: 'D-Blog',
       locale: 'ja_JP'
     });
@@ -117,9 +118,9 @@ export class DBlogPage {
   }
 }
 
-export function textDecoration(text: markdown): html {
+export function textDecoration(text: markdown, instance: DBlogInstance): html {
   return text
-    .replace(/(?<!\\)\*(?<!\\)\*(.+)(?<!\\)\*(?<!\\)\*/g, '<b>$1</b>' )
+    .replace(/(?<!\\)\*(?<!\\)\*(.+)(?<!\\)\*(?<!\\)\*/g, (...[,value]) => `<b>${instance.useLetter('MPlus-Bold', value)}</b>` )
     .replace(/(?<!\\)\*(.+)(?<!\\)\*/g, '<i>$1</i>' )
     .replace(/\_\_(.+?)\_\_/g, '<u>$1</u>' )
     .replace(/\~\~(.+?)\~\~/g, '<s>$1</s>' )
