@@ -2,19 +2,34 @@ import { mkdir, readdir, rm, readFile, writeFile } from "fs/promises";
 import { basename, extname, join, resolve } from "path";
 import { DBlogPage } from "../page";
 import { parseStopper } from "../util/fatal";
-import { build } from "estrella";
+import { build, file } from "estrella";
 import { compile } from "sass";
 import { cwd } from "process";
+import Fontmin from "fontmin";
 export interface DBlogInstanceOptions {
   contentPath: string,
   webPath: string,
   siteUrl: string,
   domainPrefix: string,
-  relativePath: boolean
+  relativePath: boolean,
+  mplus: string
 }
+type letterType = 'MPlus-Bold' | 'MPlus-Regular';
 
 export class DBlogInstance {
+
+  letterList: { weight: letterType, data: string[] }[] = [
+    { weight: 'MPlus-Bold', data: [] },
+    { weight: 'MPlus-Regular', data: [] },
+  ];
+  urlsuffix = `-${new Date().getTime()}`;
+
   constructor(public options: DBlogInstanceOptions){}
+
+  useLetter(weight: letterType, string: string) {
+    this.letterList = this.letterList.map(v => v.weight === weight ? { weight, data: [...new Set([...string.split(''), ...v.data])] } : v);
+    return string;
+  }
 
   async build() {
     const contents = await getAllFilesInJoin(this.options.contentPath, ['.md']);
@@ -42,7 +57,7 @@ export class DBlogInstance {
       const sass = compile(resolve(styleRoot, v), {
           style: 'compressed'
       });
-      await writeFile(resolve(this.options.webPath, 'styles', `${basename(v, extname(v))}.css`), sass.css);
+      await writeFile(resolve(this.options.webPath, 'styles', `${basename(v, extname(v))}.css`), sass.css.replace(/@{dblog-url-suffix}/g, this.urlsuffix));
     }))
 
     const pages = contents
@@ -57,6 +72,26 @@ export class DBlogInstance {
     });
     parseStopper();
     await Promise.all(renderer);
+    parseStopper();
+
+    const letters = this.letterList.map(v => ( { weight: v.weight, data: v.data.join('') } ));
+    console.log(letters);
+    letters.forEach(v => {
+      console.log(join(this.options.mplus,`${v.weight}.ttf`));
+      new Fontmin()
+          .use(Fontmin.glyph({
+              text: v.data,
+              hinting: false         // keep ttf hint info (fpgm, prep, cvt). default = true
+          }))
+          .use(Fontmin.ttf2woff2())
+          .src(join(this.options.mplus,`${v.weight}.ttf`))
+          .run(async (_, files) => {
+            const fontdir = resolve(this.options.webPath, 'assets', 'font');
+            await mkdir(fontdir, { recursive: true }).catch(() => {});
+            await writeFile(resolve(fontdir, `${v.weight}${this.urlsuffix}.woff2`), files[0]._contents);
+          });
+    });
+
   }
 }
 

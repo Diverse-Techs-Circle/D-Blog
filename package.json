@@ -7,6 +7,7 @@
   "dependencies": {
     "@types/node": "^17.0.15",
     "estrella": "^1.4.1",
+    "fontmin": "^0.9.9",
     "got": "^12.0.1",
     "sass": "^1.49.7",
     "typescript": "^4.5.5"

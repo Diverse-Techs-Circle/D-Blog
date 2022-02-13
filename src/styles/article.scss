@@ -1,9 +1,11 @@
 @forward 'components/common.scss';
 @use 'util/mq.scss' as mq;
 @use 'util/color.scss' as c;
+@use 'util/font.scss' as font;
 
 #content {
   article {
+    p, h1, h2, h3, h4, h5, h6 { @include font.mplus(); }
     padding: 1.25em clamp(1.25em, 4vw, 3em);
     background: white;
     border-radius: 12px;
@@ -61,6 +63,7 @@
     align-items: center;
     h1 {
       display: inline;
+      @include font.mplus();
     }
   }
 }
