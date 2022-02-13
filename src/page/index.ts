@@ -72,64 +72,65 @@ export class DBlogPage {
                             '(#の数は5個以下になります)',
                         ]);
                     }
-                    return `<h${level + 1}>${textDecoration(splitted.filter((_, i) => i !== 0).join(' '))}</h${level}>`;
-                }
+        return `<h${level + 1}>${this.instance.useLetter('MPlus-Bold', textDecoration(splitted.filter((_, i) => i !== 0).join(' '), this.instance))}</h${level}>`;
+      }
 
-                const linkcardMatch = v.data.match(/\[linkcard\]\((http.+)\)/);
-                if (linkcardMatch) {
-                    return `<a class="linkcard" href="${linkcardMatch[1]}" target="_blank" rel="noopener noreferrer">${
-                        wrapOn('p', [await getGlobalPageTitle(linkcardMatch[1])], ['title']) +
-                        wrapOn('p', [(linkcardMatch[1].match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/) ?? ['', ''])[1]], ['domain'])
-                    }</a>`;
-                }
+      const linkcardMatch = v.data.match(/\[linkcard\]\((http.+)\)/);
+      if(linkcardMatch) {
+        return `<a class="linkcard" href="${linkcardMatch[1]}" target="_blank" rel="noopener noreferrer">${
+          wrapOn('p', [this.instance.useLetter('MPlus-Regular', await getGlobalPageTitle(linkcardMatch[1]))], ['title']) +
+          wrapOn('p', [this.instance.useLetter('MPlus-Regular', (linkcardMatch[1].match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/) ?? ['', ''])[1])], ['domain'])
+        }</a>`;
+      }
 
-                return `<p>${textDecoration(v.data)}</p>`;
-            }))).join('');
+      return `<p>${textDecoration(this.instance.useLetter('MPlus-Regular', v.data), this.instance)}</p>`;
+    }))).join('');
 
-        const html = new DBlogHTML(`${this.title} | D-Blog`, 'ja');
-        html.addMeta({ charset: 'UTF-8' });
-        html.addMeta({ name: 'generator', content: 'D-Blog' });
-        html.addMeta({ name: 'theme-color', content: '#0073ff' });
-        html.addMeta({ name: 'creator', content: 'D-Techs Circle' });
-        html.addMeta({ name: 'robots', content: ['noindex', 'nofollow'] });
-        html.addMeta({
-            name: 'viewport',
-            content: [
-                { key: 'width', value: 'device-width' },
-                { key: 'initial-scale', value: 1 },
-                { key: 'maximum-scale', value: 5 },
-                { key: 'minimum-scale', value: 1 },
-            ],
-        });
-        html.withOGP({
-            type: 'article',
-            url: `${this.instance.options.siteUrl}article/${this.permalink}`,
-            title: this.title,
-            site_name: 'D-Blog',
-            locale: 'ja_JP',
-        });
-        html.addStyle(this.instance.options.relativePath ? '../../styles/article.css' : join(this.instance.options.domainPrefix, 'styles', 'article.css'));
-        html.addScript(this.instance.options.relativePath ? '../../scripts/article.js' : join(this.instance.options.domainPrefix, 'scripts', 'article.js'));
-        const article = wrapOn('article', [body]);
-        const title = wrapOn('section', [
-            wrapOn('h1', [this.title]),
-        ], undefined, 'title-wrapper');
-        return html.render(wrapOn('div', [title, article], undefined, 'content'));
-    }
+    const html = new DBlogHTML(this.title + ' | D-Blog', 'ja');
+    html.addMeta({ charset: 'UTF-8' });
+    html.addMeta({ name: 'generator', content: 'D-Blog' });
+    html.addMeta({ name: 'theme-color', content: '#0073ff' });
+    html.addMeta({ name: 'creator', content: 'D-Techs Circle' });
+    html.addMeta({ name: 'robots', content: ['noindex', 'nofollow'] });
+    html.addMeta({
+      name: 'viewport',
+      content: [
+        { key: 'width', value: 'device-width' },
+        { key: 'initial-scale', value: 1 },
+        { key: 'maximum-scale', value: 5 },
+        { key: 'minimum-scale', value: 1 },
+      ]
+    })
+    this.instance.useLetter('MPlus-Bold', this.title)
+    html.withOGP({
+      type: 'article',
+      url: this.instance.options.siteUrl + 'article/' + this.permalink,
+      title: this.instance.useLetter('MPlus-Regular', this.title),
+      site_name: 'D-Blog',
+      locale: 'ja_JP'
+    });
+    html.addStyle(this.instance.options.relativePath ? '../../styles/article.css' : join(this.instance.options.domainPrefix, 'styles', 'article.css'));
+    html.addScript(this.instance.options.relativePath ? '../../scripts/article.js' : join(this.instance.options.domainPrefix, 'scripts', 'article.js'));
+    const article = wrapOn('article', [body]);
+    const title = wrapOn('section', [
+      wrapOn('h1', [this.title])
+    ], undefined, 'title-wrapper');
+    return html.render(wrapOn('div', [title, article], undefined, 'content'));
+  }
 }
 
-export function textDecoration(text: markdown): html {
-    return text
-        .replace(/(?<!\\)\*(?<!\\)\*(.+)(?<!\\)\*(?<!\\)\*/g, '<b>$1</b>')
-        .replace(/(?<!\\)\*(.+)(?<!\\)\*/g, '<i>$1</i>')
-        .replace(/__(.+?)__/g, '<u>$1</u>')
-        .replace(/~~(.+?)~~/g, '<s>$1</s>')
-        .replace(/~~(.+?)~~/g, '<s>$1</s>')
-        .replace(/(?<!\\)`(.+?)(?<!\\)`/g, '<code class="inline">$1</code>')
-        .replace(/\\\*/g, '*')
-        .replace(/\\_/g, '_')
-        .replace(/\\~/g, '~')
-        .replace(/\\`/g, '`');
+export function textDecoration(text: markdown, instance: DBlogInstance): html {
+  return text
+    .replace(/(?<!\\)\*(?<!\\)\*(.+)(?<!\\)\*(?<!\\)\*/g, (...[,value]) => `<b>${instance.useLetter('MPlus-Bold', value)}</b>` )
+    .replace(/(?<!\\)\*(.+)(?<!\\)\*/g, '<i>$1</i>' )
+    .replace(/\_\_(.+?)\_\_/g, '<u>$1</u>' )
+    .replace(/\~\~(.+?)\~\~/g, '<s>$1</s>' )
+    .replace(/\~\~(.+?)\~\~/g, '<s>$1</s>' )
+    .replace(/(?<!\\)\`(.+?)(?<!\\)\`/g, '<code class="inline">$1</code>' )
+    .replace(/\\\*/g, '*' )
+    .replace(/\\\_/g, '_' )
+    .replace(/\\\~/g, '~' )
+    .replace(/\\\`/g, '`');
 }
 
 

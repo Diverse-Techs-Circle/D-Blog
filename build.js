@@ -7,7 +7,7 @@ build({
     target: 'esnext',
     outdir: resolve(__dirname, 'dist'),
     bundle: true,
-    external: ['estrella', 'scss', 'node:http', 'node:util', 'node:buffer', 'node:https', 'node:url', 'node:net', 'node:tls', 'node:process', 'node:stream', 'node:events'],
+    external: ['estrella', 'scss', 'node:http', 'node:util', 'node:buffer', 'node:https', 'node:url', 'node:net', 'node:tls', 'node:process', 'node:stream', 'node:events', 'fontmin'],
     minify: false,
     sourcemap: true,
     tslint: true,

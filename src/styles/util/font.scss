@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'mplus';
+  font-weight: normal;
+  src: url('../assets/font/MPlus-Regular@{dblog-url-suffix}.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'mplus';
+  font-weight: bold;
+  src: url('../assets/font/MPlus-Bold@{dblog-url-suffix}.woff2') format('woff2');
+}
+
+@mixin mplus() {
+  font-family: 'mplus', sans-serif;
+  transform: rotate(0.03deg);
+}
